@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import Card from './components/card/index.js';
+import axios from 'axios';
+
+let style = {
+  backgroundColor: '#111111',
+  display: 'flex',
+  flexWrap: 'wrap',
+  textAlign: 'center'
+}
 
 function App() {
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    const result = await axios(
+      'https://jsonplaceholder.typicode.com/users'
+    );
+    setData(result.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" data-testid="app-container" style={style}>
+        {data.map(user => (
+            <Card data={user} key={user.id} />
+        ))}
     </div>
   );
 }
